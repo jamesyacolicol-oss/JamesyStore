@@ -1,0 +1,404 @@
+/* Nuke the window-level scrollbars completely */
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden; /* Stops the main window from scrolling */
+}
+
+/* -----------------------------
+   Login (Tailwind-like đẹp CSS)
+   ----------------------------- */
+
+.js-shell {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  box-sizing: border-box;
+  background:
+    radial-gradient(1000px 500px at 10% -10%, rgba(124, 58, 237, 0.35), transparent 60%),
+    radial-gradient(800px 450px at 90% 0%, rgba(59, 130, 246, 0.25), transparent 55%),
+    radial-gradient(600px 350px at 50% 120%, rgba(236, 72, 153, 0.18), transparent 55%),
+    linear-gradient(180deg, rgba(10, 12, 20, 1), rgba(10, 12, 20, 0.85));
+}
+
+.js-auth-wrap {
+  width: min(1120px, 100%);
+}
+
+.js-auth-panel {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 18px;
+  align-items: stretch;
+}
+
+@media (max-width: 860px) {
+  .js-auth-panel {
+    grid-template-columns: 1fr;
+  }
+}
+
+.js-auth-left,
+.js-auth-right {
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    rgba(0, 0, 0, 0.25) 0 18px 55px -25px,
+    rgba(0, 0, 0, 0.2) 0 6px 24px -10px;
+  backdrop-filter: blur(10px);
+}
+
+.js-auth-left {
+  padding: 26px;
+  position: relative;
+  overflow: hidden;
+}
+
+.js-auth-left::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background:
+    radial-gradient(700px 260px at 18% 15%, rgba(124, 58, 237, 0.25), transparent 60%),
+    radial-gradient(600px 240px at 85% 25%, rgba(59, 130, 246, 0.20), transparent 58%);
+  pointer-events: none;
+}
+
+.js-auth-right {
+  padding: 26px;
+}
+
+.js-brand {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.js-logo {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background:
+    linear-gradient(180deg, rgba(124, 58, 237, 0.95), rgba(59, 130, 246, 0.85));
+  box-shadow: 0 0 0 6px rgba(124, 58, 237, 0.18);
+  position: relative;
+}
+
+.js-logo::after {
+  content: '';
+  position: absolute;
+  inset: 10px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.js-title {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: -0.6px;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.js-subtitle {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.js-callout {
+  margin-top: 22px;
+  position: relative;
+  z-index: 1;
+}
+
+.js-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 800;
+  letter-spacing: 0.2px;
+}
+
+.js-muted {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.js-hint {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.10);
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.js-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.js-card-title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: -0.4px;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.js-alert {
+  margin: 12px 0 16px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  background: rgba(239, 68, 68, 0.12);
+  color: rgba(255, 255, 255, 0.92);
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.js-form {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.js-label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.js-input {
+  width: 100%;
+  border-radius: 14px;
+  padding: 12px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.92);
+  outline: none;
+  box-sizing: border-box;
+}
+
+.js-input::placeholder {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.js-input:focus {
+  border-color: rgba(124, 58, 237, 0.65);
+  box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.18);
+}
+
+.js-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+  color: rgba(255, 255, 255, 0.72);
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.js-check input {
+  width: 18px;
+  height: 18px;
+  accent-color: #8b5cf6;
+}
+
+.js-btn {
+  margin-top: 4px;
+  width: 100%;
+  border-radius: 14px;
+  padding: 12px 14px;
+  border: 1px solid rgba(124, 58, 237, 0.45);
+  background: linear-gradient(180deg, rgba(124, 58, 237, 0.95), rgba(99, 102, 241, 0.85));
+  color: rgba(255, 255, 255, 0.96);
+  font-weight: 900;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  box-shadow: 0 16px 40px rgba(124, 58, 237, 0.25);
+  transition: transform 0.12s ease, filter 0.12s ease, box-shadow 0.12s ease;
+}
+
+.js-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+  box-shadow: 0 18px 48px rgba(124, 58, 237, 0.30);
+}
+
+.js-btn:active:not(:disabled) {
+  transform: translateY(0px);
+}
+
+.js-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.js-footer-note {
+  margin-top: 14px;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 12px;
+  text-align: center;
+}
+
+
+
+:root {
+  --text: #6b6375;
+
+  --text-h: #08060d;
+  --bg: #fff;
+  --border: #e5e4e7;
+  --code-bg: #f4f3ec;
+  --accent: #aa3bff;
+  --accent-bg: rgba(170, 59, 255, 0.1);
+  --accent-border: rgba(170, 59, 255, 0.5);
+  --social-bg: rgba(244, 243, 236, 0.5);
+  --shadow:
+    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+
+  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --mono: ui-monospace, Consolas, monospace;
+
+  font: 18px/145% var(--sans);
+  letter-spacing: 0.18px;
+  color-scheme: light dark;
+  color: var(--text);
+  background: var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  @media (max-width: 1024px) {
+    font-size: 16px;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #9ca3af;
+    --text-h: #f3f4f6;
+    --bg: #16171d;
+    --border: #2e303a;
+    --code-bg: #1f2028;
+    --accent: #c084fc;
+    --accent-bg: rgba(192, 132, 252, 0.15);
+    --accent-border: rgba(192, 132, 252, 0.5);
+    --social-bg: rgba(47, 48, 58, 0.5);
+    --shadow:
+      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+  }
+
+  #social .button-icon {
+    filter: invert(1) brightness(2);
+  }
+}
+
+body {
+  margin: 0;
+}
+
+/* Hide scrollbars globally (Chrome/Edge/Safari/Firefox/IE) */
+html {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+html::-webkit-scrollbar {
+  display: none;
+}
+body::-webkit-scrollbar {
+  display: none;
+}
+#root::-webkit-scrollbar {
+  display: none;
+}
+
+
+#root {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  text-align: center;
+  border-inline: 1px solid var(--border);
+  min-height: 100svh;
+  display: block;
+  box-sizing: border-box;
+}
+
+/* Ensure login page centering isn't broken by #root flex rules */
+.login-page-wrapper {
+  width: 100%;
+  height: 100vh;
+}
+
+
+h1,
+h2 {
+  font-family: var(--heading);
+  font-weight: 500;
+  color: var(--text-h);
+}
+
+h1 {
+  font-size: 56px;
+  letter-spacing: -1.68px;
+  margin: 32px 0;
+  @media (max-width: 1024px) {
+    font-size: 36px;
+    margin: 20px 0;
+  }
+}
+h2 {
+  font-size: 24px;
+  line-height: 118%;
+  letter-spacing: -0.24px;
+  margin: 0 0 8px;
+  @media (max-width: 1024px) {
+    font-size: 20px;
+  }
+}
+p {
+  margin: 0;
+}
+
+code,
+.counter {
+  font-family: var(--mono);
+  display: inline-flex;
+  border-radius: 4px;
+  color: var(--text-h);
+}
+
+code {
+  font-size: 15px;
+  line-height: 135%;
+  padding: 4px 8px;
+  background: var(--code-bg);
+}

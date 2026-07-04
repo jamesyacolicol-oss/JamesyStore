@@ -1,0 +1,121 @@
+.admin-sidebar {
+    width: 250px;
+    min-width: 250px;
+    background: #0f4f9e;
+    color: white;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0 14px rgba(15, 23, 42, 0.16);
+}
+
+.admin-nav-title {
+    padding: 22px 20px;
+    font-weight: 800;
+    font-size: 1.08rem;
+    line-height: 1.25;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.admin-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 14px 10px;
+}
+
+.admin-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    min-height: 46px;
+    padding: 12px 14px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.86);
+    cursor: pointer;
+    font: inherit;
+    font-weight: 650;
+    text-align: left;
+    text-decoration: none;
+    transition: background-color 160ms ease, color 160ms ease, transform 160ms ease;
+}
+
+.admin-nav-item:hover, .admin-nav-item.active {
+    background: rgba(255, 255, 255, 0.14);
+    color: #fff;
+}
+
+.admin-nav-item:hover {
+    transform: translateX(2px);
+}
+
+.admin-nav-item.active {
+    box-shadow: inset 3px 0 0 #fff;
+}
+
+.admin-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    flex: 0 0 22px;
+}
+
+.logout-btn {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: calc(100% - 20px);
+    min-height: 46px;
+    margin: auto 10px 14px;
+    padding: 12px 14px;
+    border: none;
+    border-radius: 8px;
+    background: #dc3545;
+    color: white;
+    text-align: left;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 700;
+    transition: background-color 160ms ease, transform 160ms ease;
+}
+
+.logout-btn:hover {
+    background: #b91c1c;
+    transform: translateX(2px);
+}
+
+@media (max-width: 760px) {
+    .admin-sidebar {
+        width: 76px;
+        min-width: 76px;
+    }
+
+    .admin-nav-title,
+    .admin-nav-item span:not(.admin-icon),
+    .logout-btn span {
+        display: none;
+    }
+
+    .admin-nav {
+        padding-inline: 8px;
+    }
+
+    .admin-nav-item,
+    .logout-btn {
+        justify-content: center;
+        padding-inline: 0;
+    }
+
+    .logout-btn {
+        width: calc(100% - 16px);
+        margin-inline: 8px;
+    }
+}
