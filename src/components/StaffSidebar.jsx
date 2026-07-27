@@ -1,24 +1,22 @@
-import { LayoutDashboard, LogOut, Package, ShoppingCart, Users, Shield } from 'lucide-react';
+import { LayoutDashboard, LogOut, Package, ShoppingCart, Users } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import './Sidebar.css';
 
-const adminSidebarItems = [
-  { label: 'Dashboard', href: '/admin/dashboard' },
-  { label: 'Products', href: '/admin/products' },
-  { label: 'Orders', href: '/admin/orders' },
-  { label: 'Customers', href: '/admin/customers' },
-  { label: 'Staff', href: '/admin/staff' },
+const staffSidebarItems = [
+  { label: 'Dashboard', href: '/staff/dashboard' },
+  { label: 'Orders', href: '/staff/orders' },
+  { label: 'Products', href: '/staff/products' },
+  { label: 'Customers', href: '/staff/customers' },
 ];
 
 const iconMap = {
-  '/admin/dashboard': <LayoutDashboard size={20} />,
-  '/admin/products': <Package size={20} />,
-  '/admin/orders': <ShoppingCart size={20} />,
-  '/admin/customers': <Users size={20} />,
-  '/admin/staff': <Shield size={20} />,
+  '/staff/dashboard': <LayoutDashboard size={20} />,
+  '/staff/orders': <ShoppingCart size={20} />,
+  '/staff/products': <Package size={20} />,
+  '/staff/customers': <Users size={20} />,
 };
 
-export default function AdminSidebar({ activeHref = '' }) {
+export default function StaffSidebar({ activeHref = '' }) {
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -28,10 +26,10 @@ export default function AdminSidebar({ activeHref = '' }) {
 
   return (
     <aside className="admin-sidebar">
-      <div className="admin-nav-title">Jamesy Store Admin</div>
+      <div className="admin-nav-title">Jamesy Store Staff</div>
 
       <nav className="admin-nav">
-        {adminSidebarItems.map((item) => (
+        {staffSidebarItems.map((item) => (
           <button
             key={item.href}
             type="button"

@@ -10,7 +10,8 @@ Route::get('/', function () {
         : redirect()->route('login');
 })->name('home');
 
-Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
+Route::get('/login', [LoginController::class, 'create'])->name('login');
+Route::post('/login', [LoginController::class, 'store'])->name('login.submit');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+

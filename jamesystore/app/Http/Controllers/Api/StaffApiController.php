@@ -3,16 +3,31 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Models\Customer;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\Product;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
-class AdminOrderApiController extends Controller
+class StaffApiController extends Controller
 {
-    // GET /api/admin/orders
-    public function index()
+    // GET /api/staff/products
+    public function products()
+    {
+        $products = Product::with('category')->orderBy('product_name')->get();
+        return response()->json($products);
+    }
+
+    // GET /api/staff/customers
+    public function customers()
+    {
+        $customers = Customer::orderBy('customer_name')->get();
+        return response()->json($customers);
+    }
+
+// GET /api/staff/orders
+    public function orders()
     {
         $orders = Order::query()
             ->with(['orderDetails.product', 'customer'])
@@ -34,7 +49,6 @@ class AdminOrderApiController extends Controller
                 'order_id' => $o->order_id,
                 'order_number' => $o->order_number,
                 'ordered_at' => $o->ordered_at,
-                'customer_id' => $o->customer_id,
                 'customer_name' => $customerName,
                 'items' => $items->values()->map(function ($item) {
                     return [
@@ -57,8 +71,8 @@ class AdminOrderApiController extends Controller
         });
     }
 
-    // GET /api/admin/orders/next-number
-    public function getNextOrderNumber()
+    // GET /api/staff/orders/next-number
+    public function nextOrderNumber()
     {
         $last = Order::query()->orderBy('order_id', 'desc')->first();
 
@@ -72,10 +86,9 @@ class AdminOrderApiController extends Controller
         return response()->json(['next_order_number' => (string) $next]);
     }
 
-    // POST /api/admin/orders
-    public function store(Request $request)
+    // POST /api/staff/orders
+    public function storeOrder(Request $request)
     {
-        // Validate items BEFORE anything else
         if (! $request->has('items') || ! is_array($request->items) || count($request->items) === 0) {
             return response()->json(['message' => 'Invalid payload: items is required and must be a non-empty array.'], 422);
         }
@@ -89,9 +102,8 @@ class AdminOrderApiController extends Controller
             }
         }
 
-        // Validate customer_id exists if provided
         if ($request->filled('customer_id')) {
-            $exists = \App\Models\Customer::where('customer_id', $request->customer_id)->exists();
+            $exists = Customer::where('customer_id', $request->customer_id)->exists();
             if (! $exists) {
                 return response()->json(['message' => 'Customer not found with the provided customer_id.'], 422);
             }
@@ -99,11 +111,9 @@ class AdminOrderApiController extends Controller
 
         try {
             $order = DB::transaction(function () use ($request) {
-                $userId = $request->user()?->id ?? 1;
-
                 $order = Order::create([
                     'customer_id'    => $request->customer_id ?? null,
-                    'user_id'        => $userId,
+                    'user_id'        => $request->user()?->id ?? 1,
                     'order_number'   => $request->order_number ?? ('ORD-' . time()),
                     'subtotal'       => $request->subtotal ?? $request->total_amount,
                     'tax_amount'     => $request->tax_amount ?? 0,
@@ -132,27 +142,61 @@ class AdminOrderApiController extends Controller
 
             return response()->json(['success' => true, 'order_id' => $order->order_id], 201);
         } catch (\Exception $e) {
-            \Log::error('OrderStore Error: ' . $e->getMessage());
+            \Log::error('StaffOrderStore Error: ' . $e->getMessage());
             return response()->json(['message' => 'Server error: ' . $e->getMessage()], 500);
         }
     }
 
-    // DELETE /api/admin/orders/{id}
-    public function destroy($id)
+    // GET /api/staff/dashboard
+    public function dashboard()
     {
-        return DB::transaction(function () use ($id) {
-            $items = OrderDetail::where('order_id', $id)->get();
+        $totalOrders = Order::count();
+        $recentOrders = Order::with(['orderDetails.product', 'customer'])
+            ->orderBy('order_id', 'desc')
+            ->take(5)
+            ->get();
 
-            foreach ($items as $item) {
-                Product::where('product_id', $item->product_id)
-                    ->increment('stock_quantity', $item->quantity);
-            }
+        $products = Product::with('category')->orderBy('product_name')->get();
 
-            OrderDetail::where('order_id', $id)->delete();
-            Order::where('order_id', $id)->delete();
+        $lowStock = $products->filter(function ($p) {
+            return ($p->stock_quantity ?? 0) <= 5;
+        })->values();
 
-            return response()->json(['success' => true]);
-        });
+        return response()->json([
+            'total_orders' => $totalOrders,
+            'recent_orders' => $recentOrders->map(function ($o) {
+                $customerName = null;
+                if ($o->customer) {
+                    $customerName = $o->customer->customer_name;
+                } elseif ($o->notes && preg_match('/^Customer:\s*(.+)$/i', $o->notes, $m)) {
+                    $customerName = trim($m[1]);
+                }
+                return [
+                    'order_id' => $o->order_id,
+                    'order_number' => $o->order_number,
+                    'ordered_at' => $o->ordered_at,
+                    'customer_name' => $customerName,
+                    'total_amount' => $o->total_amount,
+                    'payment_status' => $o->payment_status,
+                    'items_count' => $o->orderDetails?->count() ?? 0,
+                ];
+            }),
+            'products' => $products->map(function ($p) {
+                return [
+                    'product_id' => $p->product_id,
+                    'product_name' => $p->product_name,
+                    'stock_quantity' => $p->stock_quantity,
+                    'price' => $p->price,
+                ];
+            }),
+            'low_stock' => $lowStock->map(function ($p) {
+                return [
+                    'product_id' => $p->product_id,
+                    'product_name' => $p->product_name,
+                    'stock_quantity' => $p->stock_quantity,
+                ];
+            }),
+        ]);
     }
 }
 

@@ -1,20 +1,16 @@
 import { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
-import { Plus } from 'lucide-react';
-import AdminAddProduct from './AdminAddProduct';
 import './AdminDashboard.css';
 
-export default function AdminProduct() {
+export default function StaffProducts() {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [showAddModal, setShowAddModal] = useState(false);
-    const [message, setMessage] = useState('');
 
     const token = localStorage.getItem('token');
 
     const fetchProducts = useCallback(async () => {
         try {
-            const response = await axios.get('/api/admin/products', {
+            const response = await axios.get('/api/staff/products', {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setProducts(response.data);
@@ -29,28 +25,16 @@ export default function AdminProduct() {
         fetchProducts();
     }, [fetchProducts]);
 
-    const handleProductSuccess = (successMessage) => {
-        setMessage(successMessage);
-        fetchProducts();
-    };
-
     return (
         <div className="dashboard-wrapper" style={{ flex: 1 }}>
             <main className="main-content">
-                {/* Page Header */}
-                <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div className="page-header">
                     <div>
                         <h1>Products</h1>
-                        <p className="subtitle">Manage your inventory and stock levels</p>
+                        <p className="subtitle">View inventory and stock levels</p>
                     </div>
-                    <button className="btn btn-primary" type="button" onClick={() => setShowAddModal(true)}>
-                        + Add Product
-                    </button>
                 </div>
 
-                {message && <div className="success-banner">✓ {message}</div>}
-
-                {/* Card */}
                 <div className="admin-card">
                     <div className="admin-card-header">
                         <span className="card-title">Inventory List</span>
@@ -58,16 +42,14 @@ export default function AdminProduct() {
                     </div>
 
                     {loading ? (
-                        <div className="empty-state">
-                            <p>Loading products...</p>
-                        </div>
+                        <div className="empty-state"><p>Loading products...</p></div>
                     ) : products.length === 0 ? (
                         <div className="empty-state">
                             <div className="empty-icon">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
                             </div>
                             <h3>No products yet</h3>
-                            <p>Add your first product to start selling.</p>
+                            <p>No products available in inventory.</p>
                         </div>
                     ) : (
                         <div className="admin-card-body">
@@ -97,12 +79,6 @@ export default function AdminProduct() {
                     )}
                 </div>
             </main>
-
-            <AdminAddProduct
-                open={showAddModal}
-                onClose={() => setShowAddModal(false)}
-                onSuccess={handleProductSuccess}
-            />
         </div>
     );
 }

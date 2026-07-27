@@ -12,7 +12,7 @@ class AdminStaffApiController extends Controller
     // GET /api/admin/staff
     public function index()
     {
-        // Use the Eloquent model instead of raw DB queries
+        // Use the Elosdasdsadsadsadsadasdsaquent model instead of raw DB queries
         $staff = Staff::all();
         return response()->json($staff);
     }
@@ -22,7 +22,7 @@ class AdminStaffApiController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'phone' => 'required|string|size:11|unique:staff,phone', // Matches your frontend requirement
+'phone' => 'required|string|min:10|max:11|unique:staff,phone',
             'password' => 'required|string|min:6', // Password mandatory for new staff
         ]);
 
@@ -40,6 +40,7 @@ class AdminStaffApiController extends Controller
             'password' => Hash::make($request->password),
             'is_active' => $request->input('is_active', 1),
             'role_id' => 1,
+            'must_change_password' => true, // Force password change on first login
         ]);
 
         return response()->json(['success' => true, 'id' => $staff->staff_id], 201);

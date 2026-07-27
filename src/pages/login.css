@@ -61,3 +61,36 @@ body, html {
 .login-form button:hover {
     background-color: #0056b3;
 }
+
+/* Container that covers the entire screen */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center;      /* Center vertically */
+    z-index: 1000;           /* Ensure it sits on top */
+}
+
+/* The actual box with your message */
+.modal-box {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 300px;
+}
+
+/* Optional styling for the success/fail colors */
+.modal-box.failed {
+    border-top: 5px solid #ff4d4f;
+}
+
+.modal-box.success {
+    border-top: 5px solid #52c41a;
+}

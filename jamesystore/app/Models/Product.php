@@ -12,8 +12,8 @@ class Product extends Model
     protected $table = 'products';
     protected $primaryKey = 'product_id';
     
-    // Set to true because we added $table->timestamps() in the migration
-    public $timestamps = false;
+    // Timestamps match the migration's $table->timestamps()
+    public $timestamps = true;
 
     protected $fillable = [
         'product_code',

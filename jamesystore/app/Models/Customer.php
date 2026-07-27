@@ -10,18 +10,16 @@ class Customer extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'phone',
+        'customer_name',
+        'number',
         'address',
-        'is_active',
     ];
 
-    protected $casts = [
-        'is_active' => 'boolean',
-    ];
+    protected $casts = [];
 
     public function orders()
     {
         return $this->hasMany(Order::class);
     }
 }
+

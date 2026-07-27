@@ -10,21 +10,31 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id('order_id');
-            $table->foreignId('customer_id')->nullable();
-            $table->foreignId('user_id');
+
+            $table->foreignId('customer_id')->nullable()->constrained('customers')->nullOnDelete();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+
             $table->string('order_number')->nullable();
+
             $table->decimal('subtotal', 10, 2)->default(0);
             $table->decimal('tax_amount', 10, 2)->default(0);
             $table->decimal('total_amount', 10, 2);
             $table->decimal('payment_amount', 10, 2);
+
             $table->decimal('paid_amount', 10, 2)->default(0);
             $table->decimal('change_amount', 10, 2);
+
             $table->string('status')->default('pending');
             $table->string('payment_status')->default('unpaid');
             $table->string('payment_method')->default('cash');
+
             $table->text('notes')->nullable();
+
             $table->timestamp('ordered_at')->useCurrent();
             $table->timestamps();
+
+            // Staff ID — nullable, no FK constraint since staff table (000006) runs after this migration
+            $table->unsignedBigInteger('staff_id')->nullable();
         });
     }
 
@@ -33,3 +43,4 @@ return new class extends Migration
         Schema::dropIfExists('orders');
     }
 };
+

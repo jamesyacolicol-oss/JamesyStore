@@ -1,7 +1,8 @@
-# TODO
+# TODO.md
 
-- [x] Fix login page placeholders/examples text visibility in `resources/views/auth/login.blade.php`.
-- [ ] Fix missing `staff` table by adding/adding back the `staff` migration so `php artisan migrate` creates the `staff` table.
-- [ ] (After migration) run `php artisan migrate --force`.
-- [ ] Verify staff login works on `http://127.0.0.1:8000/login`.
+(Top-level tracker)
+
+- [ ] Repair backend PHP syntax corruptions (controllers/kernel/migrations/routes/auth)
+- [ ] Repair frontend React/CSS syntax errors
+- [ ] Run PHP lint + npm build
 

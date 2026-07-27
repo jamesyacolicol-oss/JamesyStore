@@ -6,7 +6,7 @@ import './AdminDashboard.css';
 
 const API_BASE_URL = '';
 
-export default function AdminOrders() {
+export default function StaffOrders() {
   const [orders, setOrders] = useState([]);
   const [products, setProducts] = useState([]);
   const [nextOrderNumber, setNextOrderNumber] = useState('');
@@ -28,27 +28,25 @@ export default function AdminOrders() {
 
   const authHeaders = useCallback(() => {
     const t = localStorage.getItem('token') || '';
-    return {
-      Authorization: `Bearer ${t}`,
-    };
+    return { Authorization: `Bearer ${t}` };
   }, []);
 
   const fetchOrders = useCallback(async () => {
-    const response = await axios.get(`${API_BASE_URL}/api/admin/orders`, {
+    const response = await axios.get(`${API_BASE_URL}/api/staff/orders`, {
       headers: authHeaders(),
     });
     setOrders(response.data || []);
   }, [authHeaders]);
 
   const fetchProducts = useCallback(async () => {
-    const response = await axios.get(`${API_BASE_URL}/api/admin/products`, {
+    const response = await axios.get(`${API_BASE_URL}/api/staff/products`, {
       headers: authHeaders(),
     });
     setProducts(response.data || []);
   }, [authHeaders]);
 
   const fetchNextOrderNumber = useCallback(async () => {
-    const res = await axios.get(`${API_BASE_URL}/api/admin/orders/next-number`, {
+    const res = await axios.get(`${API_BASE_URL}/api/staff/orders/next-number`, {
       headers: authHeaders(),
     });
     setNextOrderNumber(res.data?.next_order_number ?? '');
@@ -74,17 +72,14 @@ export default function AdminOrders() {
       try {
         await refreshPageData({ showLoading: false });
       } catch (error) {
-        console.error('Error loading orders page:', error);
+        console.error('Error loading staff orders page:', error);
       } finally {
         if (!cancelled) setLoading(false);
       }
     };
 
     loadPageData();
-
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, [refreshPageData, token]);
 
   const refreshOrdersAfterChange = async () => {
@@ -101,26 +96,15 @@ export default function AdminOrders() {
     await refreshOrdersAfterChange();
   };
 
-  const handleDeleteOrder = async (orderId) => {
-    if (!window.confirm('Delete this order and restore its product stock?')) return;
-
-    await axios.delete(`${API_BASE_URL}/api/admin/orders/${orderId}`, {
-      headers: authHeaders(),
-    });
-
-    await refreshOrdersAfterChange();
-  };
-
   if (!token) return null;
 
   return (
     <div className="dashboard-wrapper" style={{ flex: 1 }}>
       <main className="main-content">
-        {/* Page Header */}
         <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
             <h1>Orders</h1>
-            <p className="subtitle">Manage and track store transactions</p>
+            <p className="subtitle">View and create store transactions</p>
           </div>
           <button className="btn btn-primary" type="button" onClick={() => setIsOrderModalOpen(true)}>
             + New Order
@@ -129,7 +113,6 @@ export default function AdminOrders() {
 
         {message && <div className="success-banner">✓ {message}</div>}
 
-        {/* Card */}
         <div className="admin-card">
           <div className="admin-card-header">
             <span className="card-title">All Transactions</span>
@@ -185,8 +168,12 @@ export default function AdminOrders() {
                         <td>{formatMoney(order.change_amount)}</td>
                         <td><span className={`status-badge ${order.payment_status || 'pending'}`}>{order.payment_status || '-'}</span></td>
                         <td>
-                          <button type="button" className="btn btn-danger" onClick={() => handleDeleteOrder(order.order_id)}>
-                            Delete
+                          <button
+                            type="button"
+                            className="btn btn-ghost"
+                            onClick={() => { setSelectedOrder(order); setIsDetailsModalOpen(true); }}
+                          >
+                            View
                           </button>
                         </td>
                       </tr>
@@ -222,3 +209,4 @@ export default function AdminOrders() {
     </div>
   );
 }
+

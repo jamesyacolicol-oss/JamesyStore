@@ -11,33 +11,34 @@ class Authenticate extends Middleware
 {
     public function handle($request, Closure $next, ...$guards)
     {
-        // When hitting API routes, the request may not have a session configured.
-        // For JSON requests, return 401 instead of crashing.
+        // For API/JSON requests with Sanctum — delegate to parent authenticate()
+        // which will validate the Bearer token and throw AuthenticationException if invalid.
         if ($request->expectsJson()) {
+            // If guards are empty, default to 'sanctum' for API routes
+            if (empty($guards)) {
+                $guards = ['sanctum'];
+            }
+            $this->authenticate($request, $guards);
             return $next($request);
         }
 
-        // Avoid calling session() on requests that do not have a session store.
-        // For API/JSON requests, we already returned earlier via expectsJson().
+        // Web request handling with session guard
         $sessionGuard = $request->hasSession() ? $request->session()->get('auth_guard') : null;
 
         if ($sessionGuard) {
             Auth::shouldUse($sessionGuard);
         }
 
-        // If we have no session guard, treat request as unauthenticated (API will return 401 earlier).
         if (! $sessionGuard) {
-            return $request->expectsJson() ? response()->json(['message' => 'Unauthenticated.'], 401) : redirect()->route('login');
+            return redirect()->route('login');
         }
 
         if (! Auth::guard($sessionGuard)->check()) {
-            return $request->expectsJson() ? response()->json(['message' => 'Unauthenticated.'], 401) : redirect()->route('login');
+            return redirect()->route('login');
         }
-
 
         return $next($request);
     }
-
 
     protected function redirectTo(Request $request): ?string
     {
